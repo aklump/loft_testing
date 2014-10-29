@@ -1,0 +1,5 @@
+name = Loft Testing
+description = "Provides custom Drupal integration for Loft Testing http://www.intheloftstudios.com/packages/php/loft_testing."
+package = Development
+version = 7.x-0.1
+core = 7.x

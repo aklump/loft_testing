@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Base file for the loft_testing module.
+ *
+ * @defgroup loft_testing Loft Testing
+ * @{
+ */
+
+/**
+ * Implements hook_boot().
+ */
+function loft_testing_boot() {
+  // You must load the composer autoload in this fashion.
+  require_once dirname(__FILE__) . '/lib/loft_testing/vendor/autoload.php';
+}
