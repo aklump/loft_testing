@@ -1,6 +1,9 @@
 # Drupal Module: Loft Testing
 **Author:** Aaron Klump  <sourcecode@intheloftstudios.com>
 
+## For Development Only
+It is recommended to only use this module on development instances of a website, and disable it on production environments.
+
 ## Mock functions
 The file found at `includes/mocks.inc` can be required in your module's PhpUnit test files (or in composer.json) to allow for easier testing; that file mocks a few common drupal functions that might be found in your units.  Here is an example of how you might implement that in `MYMODULE/tests/phpunit/`
 
@@ -22,10 +25,14 @@ In general do not use `DrupalUnitTest`, instead us phpunit.  But for integration
 When testing requires database objects, you should create a separate module called `module_name_test` which is a feature.
 
 ## Implementation
-Add this line to your modules's info file:
 
-    dependencies[] = loft_testing
+### For unit testing
 
+    use AKlump\LoftTesting\Simpletest\PhpUnitTestProxy as DrupalUnitTestCase;
+
+    class FhAppsPhpUnitTestProxyServerV3 extends DrupalUnitTestCase {
+
+### For integration testing
 Add the following to the beginning of your `module.test` file
 
     <?php
