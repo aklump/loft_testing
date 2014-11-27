@@ -4,6 +4,17 @@
 ## For Development Only
 It is recommended to only use this module on development instances of a website, and disable it on production environments.
 
+## Drupal Unit Testing with Drupal Functions
+To be able to unit test where drupal functions are used, you will have to do a minimal bootstrap of Drupal.  Fortunately this is provided when you include a single file at the top of your phpunit test file.  That file is in this module and is called `includes/bootstrap.inc`.  A phpunit test file should start like this, minimally:
+
+    <?php
+    // This file will bootstrap drupal and give you access to common functions
+    // such as format_plural(), check_plain(), etc.  It also handles loading
+    // the .module file of your module as well.
+    require_once dirname(__FILE__) . '/../../../loft_testing/includes/bootstrap.inc';
+
+    class MyModuleTest extends \PhpUnit_Framework_Testcase {
+
 ## Mock functions
 The file found at `includes/mocks.inc` can be required in your module's PhpUnit test files (or in composer.json) to allow for easier testing; that file mocks a few common drupal functions that might be found in your units.  Here is an example of how you might implement that in `MYMODULE/tests/phpunit/`
 
