@@ -4,44 +4,28 @@
 ## For Development Only
 It is recommended to only use this module on development instances of a website, and disable it on production environments.
 
-## Drupal Unit Testing with Drupal Functions
-To be able to unit test where drupal functions are used, you will have to do a minimal bootstrap of Drupal.  Fortunately this is provided when you include a single file at the top of your phpunit test file.  That file is in this module and is called `includes/bootstrap.inc`.  A phpunit test file should start like this, minimally:
+# PhpUnit Testing with Drupal Functions
+To be able to unit test where drupal functions are used, you will have to do a minimal bootstrap of Drupal.  Fortunately this is provided when you include a single file at the top of your phpunit test file.  That file is in this module and is called `includes/bootstrap.inc`.  A phpunit test file should resemble the following:
 
-    <?php
-    // This file will bootstrap drupal and give you access to common functions
-    // such as format_plural(), check_plain(), etc.  It also handles loading
-    // the .module file of your module as well.
-    require_once dirname(__FILE__) . '/../../../loft_testing/includes/bootstrap.inc';
+    examples/PhpUnitTest.php
 
-    class MyModuleTest extends \PhpUnit_Framework_Testcase {
+### PHP Fatal error:  require_once(): Failed opening required 'DRUPAL_ROOT/includes/bootstrap.inc'
+In some cases (i.e., using symbolic links) the drupal root cannot be automatically detected and will need to be explicitly defined in your phpunit test; again, see `examples/PhpUnitTest.php` for more info.  You're looking for this line:
 
-## Mock functions
-The file found at `includes/mocks.inc` can be required in your module's PhpUnit test files (or in composer.json) to allow for easier testing; that file mocks a few common drupal functions that might be found in your units.  Here is an example of how you might implement that in `MYMODULE/tests/phpunit/`
+    define('DRUPAL_ROOT', '/Library/Projects/website/public_html');
 
-    {
-      "autoload": {
-        "files": [
-          "../../../../../../all/modules/custom/loft_testing/lib/loft_testing/phpunit/drupal7_mocks.php",
-          "../../MYMODULE.module",
-          "../../MYMODULE.install",
-          "../../includes/MYMODULE.admin.inc",
-          "../../includes/MYMODULE.pages.inc"
-        ]
-      }
-    }
-
-# Simpletests (not for unit testing anymore)
-In general do not use `DrupalUnitTest`, instead us phpunit.  But for integration testing, use the simpletest module.
-
-When testing requires database objects, you should create a separate module called `module_name_test` which is a feature.
-
-## Implementation
-
-### For unit testing
+### Integrating with the Drupal testing UI
 
     use AKlump\LoftTesting\Simpletest\PhpUnitTestProxy as DrupalUnitTestCase;
 
     class FhAppsPhpUnitTestProxyServerV3 extends DrupalUnitTestCase {
+
+# Simpletests (not for unit testing anymore)
+In general do not use `DrupalUnitTest`, instead us PhpUnit (see above).  But for integration testing, use the simpletest module.
+
+When testing requires database objects, you should create a separate module called `module_name_test` which is a feature.
+
+## Implementation
 
 ### For integration testing
 Add the following to the beginning of your `module.test` file

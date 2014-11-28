@@ -17,36 +17,31 @@
  * @{
  */
 
-// We'll assume that if DRUPAL_ROOT is defined we have already bootstrapped
-// drupal, and can just abort now.
-if (defined('DRUPAL_ROOT')) {
-  return;
-}
-
 /**
  * Recursively search upwards to locate drupal root.
- *
- * @return [type] [description]
  */
 function _loft_testing_define_root() {
-  $root = getcwd();
-  if (file_exists($root . '/includes/bootstrap.inc')) {
-    define('DRUPAL_ROOT', $root);
-    return;  
-  }
-
   if (defined('DRUPAL_ROOT')) {
     return;
   }
 
-  if (chdir('../') && getcwd() !== '/') {
+  $root = realpath(getcwd());
+  if (file_exists($root . '/includes/bootstrap.inc')) {
+    define('DRUPAL_ROOT', $root);
+  }
+  elseif (chdir('../') && getcwd() !== '/') {
     return _loft_testing_define_root();
   }
-
-  return;
 }
 
 _loft_testing_define_root();
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
+// If we haven't bootstrapped Drupal yet, do so, minimally.
+if (drupal_get_bootstrap_phase() === -1) {
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+  require_once DRUPAL_ROOT . '/includes/common.inc';
+  require_once DRUPAL_ROOT . '/includes/path.inc';
+}
+
+require_once dirname(__FILE__) . '../../vendor/autoload.php';
