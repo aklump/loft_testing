@@ -42,6 +42,21 @@ if (drupal_get_bootstrap_phase() === -1) {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
   require_once DRUPAL_ROOT . '/includes/common.inc';
   require_once DRUPAL_ROOT . '/includes/path.inc';
+
+//   require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
+//   require_once DRUPAL_ROOT . '/includes/theme.inc';
+//   require_once DRUPAL_ROOT . '/includes/pager.inc';
+//   require_once DRUPAL_ROOT . '/' . variable_get('menu_inc', 'includes/menu.inc');
+//   require_once DRUPAL_ROOT . '/includes/tablesort.inc';
+  require_once DRUPAL_ROOT . '/includes/file.inc';
+  require_once DRUPAL_ROOT . '/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/includes/image.inc';
+//   require_once DRUPAL_ROOT . '/includes/form.inc';
+//   require_once DRUPAL_ROOT . '/includes/mail.inc';
+//   require_once DRUPAL_ROOT . '/includes/actions.inc';
+//   require_once DRUPAL_ROOT . '/includes/ajax.inc';
+//   require_once DRUPAL_ROOT . '/includes/token.inc';
+//   require_once DRUPAL_ROOT . '/includes/errors.inc';
 }
 
 require_once dirname(__FILE__) . '../../vendor/autoload.php';
