@@ -223,8 +223,8 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
   public function assertCount($control, $countable, $message = '', $group = NULL) {
     $group = $group ? $group : $this->getSubtestGroup();
     if (empty($message)) {
-      $expected = count($countable);
-      $message = "Assert that actual size $control matches expected size $expected.";
+      $actual = count($countable);
+      $message = "Assert that actual size $actual matches expected size $control.";
     }
     $this->assertSame($control, count($countable), $message, $group);
   }
