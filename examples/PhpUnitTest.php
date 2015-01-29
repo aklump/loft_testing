@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * PHPUnit tests for the my_module module.
+ * PHPUnit tests for the {{ my_module_name }} module.
  */
 
 /**
@@ -15,7 +15,7 @@
 
 require_once dirname(__FILE__) . '/../../../loft_testing/includes/bootstrap.inc';
 
-class LoftGtmTest extends \AKlump\LoftTesting\PhpUnit\TestCase {
+class {{ MyModuleName }}Test extends \AKlump\LoftTesting\PhpUnit\TestCase {
 
   // ... place your tests here.  
 
@@ -24,6 +24,6 @@ class LoftGtmTest extends \AKlump\LoftTesting\PhpUnit\TestCase {
     // https://api.drupal.org/api/drupal/includes!module.inc/function/system_list/7
     // are loaded automatically: to have access to the functions in other
     // modules you need to send the module names through parent::setUp()...
-    parent::setUp(array('my_module'));
+    parent::setUp(array('{{ my_module_name }}'));
   }
 }

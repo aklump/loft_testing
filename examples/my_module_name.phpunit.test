@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * Provides a simpletest test runner for PhpUnit tests in ova_chart
+ *
+ * Normally this file does not need to be altered for a Drupal module.
+ *
+ * TESTS SHOULD NOT BE ADDED TO THIS FILE, instead use the phpunit directory
+ * and create test class files as you normally would.  This file serves to
+ * integrate that directory with the Drupal simpletest UI.
+ *
+ * @see http://www.intheloftstudios.com/packages/drupal/loft_testing
+ * 
+ * @ingroup ova_chart
+ * @{
+ */
+use AKlump\LoftTesting\Simpletest\PhpUnitTestProxy as DrupalUnitTestCase;
+
+class {{ MyModuleName }}PhpUnitTestProxy extends DrupalUnitTestCase {
+
+  public function setUp() {
+    // Add one or more directories where phpunit should be run
+    $this->proxyAddPath(dirname(__FILE__) . '/phpunit');
+    parent::setUp();
+  }
+
+  public static function getInfo() {
+    return array(
+      'name' => '{{ My Module Name }} PhpUnit Proxy',
+      'description' => 'Test runner for PhpUnit tests in the {{ My Module Name }} module.',
+      //'group' => variable_get('site_name') . ' Units',
+      'group' => '{{ My Module Name }} Units',
+    );
+  }
+
+  public function testProxy() {
+    $this->proxyRun();
+  }  
+}

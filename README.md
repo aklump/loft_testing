@@ -4,28 +4,10 @@
 ## For Development Only
 It is recommended to only use this module on development instances of a website, and disable it on production environments.
 
-# PhpUnit Testing with Drupal Functions
-To be able to unit test where drupal functions are used, you will have to do a minimal bootstrap of Drupal.  Fortunately this is provided when you include a single file at the top of your phpunit test file.  That file is in this module and is called `includes/bootstrap.inc`.  A phpunit test file should resemble the following:
-
-    examples/PhpUnitTest.php
-
-### PHP Fatal error:  require_once(): Failed opening required 'DRUPAL_ROOT/includes/bootstrap.inc'
-In some cases (i.e., using symbolic links) the drupal root cannot be automatically detected and will need to be explicitly defined in your phpunit test; again, see `examples/PhpUnitTest.php` for more info.  You're looking for this line:
-
-    define('DRUPAL_ROOT', '/Library/Projects/website/public_html');
-
-### Integrating with the Drupal testing UI
-
-    use AKlump\LoftTesting\Simpletest\PhpUnitTestProxy as DrupalUnitTestCase;
-
-    class FhAppsPhpUnitTestProxyServerV3 extends DrupalUnitTestCase {
-
-# Simpletests (not for unit testing anymore)
-In general do not use `DrupalUnitTest`, instead us PhpUnit (see above).  But for integration testing, use the simpletest module.
+## Implementation
 
 When testing requires database objects, you should create a separate module called `module_name_test` which is a feature.
 
-## Implementation
 
 ### For integration testing
 Add the following to the beginning of your `module.test` file
@@ -90,12 +72,6 @@ In this case follow camel case naming conventions for your subtest name.
 
     public function subtestMultipleTermsShouldBeAdded() {
 
-## PhpUnit Test Proxy
-### Known Issues
-* Does not work with mamp unless you make a modification to: `/Applications/MAMP/Library/bin/envvars`; you need to comment out the lines in that file, then restart MAMP, e.g., 
-
-        #DYLD_LIBRARY_PATH="/Applications/MAMP/Library/lib:$DYLD_LIBRARY_PATH"
-        #export DYLD_LIBRARY_PATH
     
 ## Complications
 ### Taxonomy
