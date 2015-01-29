@@ -1,5 +1,5 @@
 # Unit Testing Drupal 7: with PhpUnit
-
+Write PhpUnit tests in a Drupal bootstrapped environment!
 
 ## Quickstart: Step 1
 1. Make sure you're using `sites/default/settings.php` (see Known Issues).

@@ -1,0 +1,58 @@
+<?php
+/**
+ * @file
+ * Provides simpletest integration testing for the {{ my_module_name }} module.
+ *
+ * LoftTesting creates PhpUnit aliases so that you can write Simpletest tests
+ * using PhpUnit assertion method names.
+ *
+ * @see http://www.intheloftstudios.com/packages/drupal/loft_testing
+ *
+ * @ingroup {{ my_module_name }}
+ * @{
+ */
+use AKlump\LoftTesting\Simpletest\DrupalWebTestCase;
+
+class {{ MyModuleName }}WebTestCase extends DrupalWebTestCase {
+
+  public function subtest1TestName() {
+    $this->assertTrue(TRUE);
+  }
+
+
+  //
+  //
+  // Custom assertions go below here.
+  // 
+
+
+  // 
+  // 
+  // Declare one or more test groups below here.  Each test group will be run
+  // on a new drupal instance.  Fewer test groups will yield faster tests results.
+  // To skip over a test for a time, prepend '_' so it reads _test1().
+  // 
+  public function test1() {
+    $this->doSubtests();
+  }
+
+  public static function getInfo() {
+    return array(
+      'name' => '{{ My Module Name }} Integration tests',
+      'description' => 'Integration testing for {{ My Module Name }}.',
+      //'group' => variable_get('site_name') . ' Integration',
+      'group' => '{{ My Module Name }} Integration',
+    );
+  }
+
+  public function setUp($modules = array()) {
+    if (!is_array($modules)) {
+      $modules = func_get_args();
+    }
+    // List the modules (not their dependencies they are automatic, though it won't hurt anything) you need to enable for testing; unless you are enabling a module that has {{ my_module_name }} as a dependcy. You may need to create a feature for testing, say for taxonomy, etc if so then you want to save that feature as {{ my_module_name }}_test_feature.
+    //$modules += array('{{ my_module_name }}', '{{ my_module_name }}_test_feature');
+    $modules += array('{{ my_module_name }}');
+    $modules = array_unique($modules);
+    parent::setUp($modules);
+  }
+}
