@@ -30,6 +30,12 @@ Instead of creating long or multiple test methods you can create subtest methods
       $this->doSubtests();
     }
 
+### Subtest fixtures
+For any given subtest there are two fixture methods called, in the case of a test group called `test1` these would be those methods; their purpose should be self-evident.  The method naming convention is `setUpSub{{ groupName }}` and `TearDownSub{{ groupName }}()`.
+
+    setUpSubtest1();
+    tearDownSubtest1();
+
 ## Skipping a `testMethod` -> `_testMethod`
 If you have a test method `_test...` that is working well and you want to skip it while developing more tests, and to save execution time, you can disable it simply by preceding the method name with an underscore.  Normally only methods beginning with "test" are called, so naturally this will be skipped over.
 

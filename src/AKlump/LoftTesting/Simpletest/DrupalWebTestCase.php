@@ -8,7 +8,7 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
     'skipping' => array(), 
     'subtestGroup' => 'Other',
   );
-
+  
   public function setUp($modules = array()) {
 
     // List out the tests that are being skipped.
@@ -23,6 +23,56 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
       $modules = func_get_args();
     }
     parent::setUp($modules);
+
+    static::setUpBeforeClass();
+  }
+
+  /**
+   * Sets the global $user object to an account.
+   *
+   * When the test code you're running is expecting to user global $user,
+   * it usually doesn't want to use $GLOBALS['user'] (the admin running the
+   * tests), so this module allows you to mock the global user for the duration
+   * of one subtest.
+   *
+   * @param  obj $account
+   */
+  public function userMakeGlobal(\stdClass $account) {
+    if (isset($account->uid)) {
+      global $user;
+      $this->userMakeGlobal = $user;
+      $user = $account;
+      $this->pass('Global user set to uid = ' . $user->uid);
+    }
+    else {
+      $this->fail('Could not set global user; missing uid.');
+    }
+  }
+
+  /**
+   * Restores the global user after calling userMakeGlobal.
+   *
+   * THIS IS AUTOMATICALLY CALLED AT THE END OF EACH SUBTEST.
+   */
+  public function userRestore() {
+    global $user;
+    if (isset($this->userMakeGlobal)) {
+      $user = $this->userMakeGlobal;
+      unset($this->userMakeGlobal);
+      $this->pass('Global user restored to uid = ' . $user->uid);
+    }
+  }
+
+  public function tearDown() {
+    static::tearDownAfterClass();
+  }
+
+  public static function setUpBeforeClass() {
+    // May be extended if desired for PhpUnit syntax.
+  }
+  
+  public static function tearDownAfterClass() {
+    // May be extended if desired for PhpUnit syntax.
   }
 
   /**
@@ -92,11 +142,23 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
       
     }
     else {
-      //$this->assert(TRUE, "Running test group: $group");
       $this->setSubtestGroup($group);
       foreach($this->getSubtests($group) as $subtest) {
-        $this->assert(TRUE, "Running subtest: $subtest", $group);
+        $this->pass("Running subtest: $subtest", $group);
+        
+        $method = "setUpSub{$group}";
+        if (method_exists($this, $method)) {
+          $this->{$method}();
+        }
+
         $this->{$subtest}();
+
+        $method = "tearDownSub{$group}";
+        if (method_exists($this, $method)) {
+          $this->{$method}();
+        }
+        // Final cleanup
+        $this->userRestore();
       }        
     }
 
@@ -126,7 +188,6 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
           $regex = preg_quote("sub$test");
           if (preg_match("/^$regex.+/", $method)) {
             $testGroups[$test][] = $method;
-            //$this->assert(TRUE, "Subtest found: $method");
           }
         }
       }
@@ -307,6 +368,42 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
     }
     $this->assertTrue($test, $message, $group);
   }
+
+  public function assertInternalType($expected, $actual, $message = '', $group = NULL) {
+    $group   = $group ? $group : $this->getSubtestGroup();
+    $string  = (string) $actual;
+    $message = $message ? (string) $message : "Failed asserting that $string is of type \"$expected\".";
+    $test = FALSE;
+    switch ($expected) {
+      case 'bool':
+      case 'boolean':
+        $test = is_bool($actual);
+        break;
+
+      case 'float':
+        $test = is_float($actual);
+        break;
+
+      case 'int':
+        $test = is_int($actual);
+        break;
+        
+      case 'object':
+        $test = is_object($actual);
+        break;
+        
+      case 'array':
+        $test = is_array($actual);
+        break;
+
+      case 'string':
+        $test = is_string($actual);
+        break;
+    }
+      
+    $this->assertTrue($test, $message, $group);
+  }
+  
 
   /**
    * Deprecated

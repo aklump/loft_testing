@@ -19,6 +19,19 @@ class {{ MyModuleName }}WebTestCase extends DrupalWebTestCase {
     $this->assertTrue(TRUE);
   }
 
+  
+  // 
+  // 
+  // Fixtures for each subtest of test1.
+  // 
+  public function setUpSubtest1() {
+  
+  }
+  
+  public function tearDownSubtest1() {
+  
+  }
+
 
   //
   //
