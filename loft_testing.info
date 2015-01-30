@@ -2,5 +2,5 @@ name = Loft Testing
 description = "Provides a way to use PhpUnit in Drupal 7 modules and better Integration testing by extending the SimpleTest classes."
 package = Development
 homepage = "http://www.intheloftstudios.com/packages/drupal/loft_testing"
-version = "7.x-0.3-rc5"
+version = "7.x-0.3-rc6"
 core = 7.x
