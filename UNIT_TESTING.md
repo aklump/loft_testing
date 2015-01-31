@@ -15,14 +15,14 @@ Write PhpUnit tests in a Drupal bootstrapped environment!
 
 **Warning: You must always enable Loft Testing when you enable Simpletest, if you follow the instructions in step two, otherwise you'll get something like the following error when you visit the drupal testing page:**
 
-    Fatal error: Class 'AKlump\LoftTesting\Simpletest\PhpUnitTestProxy' not found in ... phpunit.test on line 19
+    Fatal error: Class 'AKlump\LoftTesting\Simpletest\PhpUnitTestProxy' not found in ... phpunits.test on line 19
 
-1. Create a file called `tests/{{ my_module_name }}.phpunit.test`.
-1. Copy the contents of `examples/my_module_name.phpunit.test`.
+1. Create a file called `tests/{{ my_module_name }}.phpunits.test`.
+1. Copy the contents of `examples/my_module_name.phpunits.test`.
 1. Replace `{{ my_module_name }}`, `{{ MyModuleName }}` and `{{ My Module Name }}`.
 1. Add the following line to your module's info file:
 
-        files[] = tests/{{ my_module_name }}.phpunit.test
+        files[] = tests/{{ my_module_name }}.phpunits.test
 
 1. Make sure you have the correct folder name in, where your tests are written.
 
@@ -39,7 +39,7 @@ To be able to unit test where drupal functions are used, you will have to do a m
 
 ## Known Issues
 * If you are not using `sites/default/settings.php` then this doesn't work yet.
-* If your phpunit executable is not located at `usr/local/bin/phpunit` you will need to set it in the setUp method of each proxy file using `proxySetExec`, e.g., `examples/my_module_name.phpunit.test` for info.  Refer to the following example:
+* If your phpunit executable is not located at `usr/local/bin/phpunit` you will need to set it in the setUp method of each proxy file using `proxySetExec`, e.g., `examples/my_module_name.phpunits.test` for info.  Refer to the following example:
     
         public function setUp() {
           // Define the system path to phpunit.

@@ -28,5 +28,9 @@ class TestCase extends \PHPUnit_Framework_TestCase  {
       $this->setup = TRUE;
     }  
   }
-  
+
+  public function testNoWarning() {
+    // Sticking this here so we don't get warning:
+    // No tests found in class "AKlump\LoftTesting\PhpUnit\TestCase".
+  }
 }

@@ -101,9 +101,10 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
     if ($group === NULL) {
       $group = $this->getCallingTestMethod();
     }
+    $group = ltrim($group, '_');
     if (empty($this->loftDrupalWebTestCaseData['skipping'][$group])) {
       $this->loftDrupalWebTestCaseData['skipping'][$group] = $group;
-      $this->error("Test group ($group) is currently being skipped.", $group);
+      $this->error("Test group \"$group\" is currently being skipped.", $group);
     }    
 
     return $this;
@@ -369,10 +370,34 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
     $this->assertTrue($test, $message, $group);
   }
 
+  /**
+   * Asserts that $actual is of type $expected.
+   *
+   * @param  string $expected
+   *   One of:
+   *   - boolean || bool
+   *   - integer || int
+   *   - float
+   *   - string
+   *   - array
+   *   - object
+   *   - null
+   * @param  mixed $actual
+   * @param  string $message
+   *   Optional.
+   * @param  string $group
+   *   Optional.
+   */
   public function assertInternalType($expected, $actual, $message = '', $group = NULL) {
     $group   = $group ? $group : $this->getSubtestGroup();
-    $string  = (string) $actual;
-    $message = $message ? (string) $message : "Failed asserting that $string is of type \"$expected\".";
+    
+    // We can can convert $actual to a string we will...
+    $temp    = $actual;
+    if (@settype($temp, 'string') === FALSE) {
+      $temp = 'subject';
+    }
+
+    $message = $message ? (string) $message : "Failed asserting that \"$temp\" is of type \"$expected\".";
     $test = FALSE;
     switch ($expected) {
       case 'bool':
@@ -385,6 +410,7 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
         break;
 
       case 'int':
+      case 'integar':
         $test = is_int($actual);
         break;
         
@@ -399,12 +425,17 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
       case 'string':
         $test = is_string($actual);
         break;
+
+      case 'null':
+        $test = is_null($actual);
+        break;
     }
-      
-    $this->assertTrue($test, $message, $group);
+    
+    if (!$test) {
+      $this->assertTrue($test, $message, $group);
+    } 
   }
   
-
   /**
    * Deprecated
    */

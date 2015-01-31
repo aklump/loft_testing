@@ -19,18 +19,6 @@ class {{ MyModuleName }}WebTestCase extends DrupalWebTestCase {
     $this->assertTrue(TRUE);
   }
 
-  
-  // 
-  // 
-  // Fixtures for each subtest of test1.
-  // 
-  public function setUpSubtest1() {
-  
-  }
-  
-  public function tearDownSubtest1() {
-  
-  }
 
 
   //
@@ -41,14 +29,42 @@ class {{ MyModuleName }}WebTestCase extends DrupalWebTestCase {
 
   // 
   // 
-  // Declare one or more test groups below here.  Each test group will be run
-  // on a new drupal instance.  Fewer test groups will yield faster tests results.
-  // To skip over a test for a time, prepend '_' so it reads _test1().
+  // Declare one or more test groups below here, each must begin with "test",
+  // e.g. "test1" or "testSomeGroupName".  Each test group will be run
+  // on a new drupal instance.
   // 
+  // HINT: Only create a new group when the environment needs to change.
+  // 
+  // I'd recommend fewer test groups with more subtests; for faster results
+  // and cleaner code.  It might even make sense to create multiple classes
+  // rather than several test groups in one class if the subjects being
+  // tested do not depend much on each other; this too will decrease the wait
+  // time for tests.
+  //   
+  // To skip over a test group for a time, prepend '_' so the method name
+  // is _{group}(), e.g. _test1().
+  // 
+  // Available fixtures for each subtest are:
+  // - setUpSub{$group}()
+  // - tearDownSub{$group}()
+
   public function test1() {
     $this->doSubtests();
   }
 
+  public function setUpSubtest1() {
+  
+  }
+  
+  public function tearDownSubtest1() {
+  
+  }  
+
+
+  //
+  //
+  // Class info and fixtures.
+  // 
   public static function getInfo() {
     return array(
       'name' => '{{ My Module Name }} Integration tests',
