@@ -38,6 +38,7 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
    * @param  obj $account
    */
   public function userMakeGlobal(\stdClass $account) {
+    $this->userRestore();
     if (isset($account->uid)) {
       global $user;
       $this->userMakeGlobal = $user;
@@ -52,7 +53,8 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
   /**
    * Restores the global user after calling userMakeGlobal.
    *
-   * THIS IS AUTOMATICALLY CALLED AT THE END OF EACH SUBTEST.
+   * THIS IS AUTOMATICALLY CALLED AT THE END OF EACH SUBTEST AND BEFORE
+   * EACH CALL OF userMakeGlobal().
    */
   public function userRestore() {
     global $user;
@@ -187,7 +189,7 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
       foreach (array_keys($testGroups) as $test) {
         foreach ($methods as $method) {
           $regex = preg_quote("sub$test");
-          if (preg_match("/^$regex.+/", $method)) {
+          if (preg_match("/^$regex.*/", $method)) {
             $testGroups[$test][] = $method;
           }
         }
@@ -230,6 +232,15 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
    */
   public function getSubtestGroup() {
     return $this->loftDrupalWebTestCaseData['subtestGroup'];
+  }
+
+  /**
+   * Dumps a variable to the output as a warning.
+   *
+   * @param  mixed $var
+   */
+  public function dump($var) {
+    parent::error(print_r($var, TRUE));
   }
 
   // These are PhpUnit aliases so I don't have to remember two systems
@@ -289,6 +300,14 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
       $message = "Assert that actual size $actual matches expected size $control.";
     }
     $this->assertSame($control, count($countable), $message, $group);
+  }
+
+  public function assertArrayContains($value, $array, $message = '', $group = NULL) {
+    $group = $group ? $group : $this->getSubtestGroup();
+    if (empty($message)) {
+      $message = "Assert that an array contains $value.";
+    }    
+    $this->assertTrue(array_search($value, $array) !== FALSE, $message, $group);
   }
 
   public function assertArrayHasKey($key, $array, $message = '', $group = NULL) {

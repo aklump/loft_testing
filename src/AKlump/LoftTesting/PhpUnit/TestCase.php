@@ -24,6 +24,10 @@ class TestCase extends \PHPUnit_Framework_TestCase  {
     if ($modules) {
       foreach ($modules as $module) {
         \module_load_include('module', $module, $module);
+
+        if (function_exists("{$module}_boot")) {
+          call_user_func("{$module}_boot");
+        }
       }
       $this->setup = TRUE;
     }  

@@ -34,6 +34,14 @@ function _loft_testing_define_root() {
   }
 }
 
+//
+//
+// To avoid the warning of not defined when using CLI testing.
+// @todo not sure if this has any negative implications? 2015-02-02T08:40, aklump
+if (!isset($_SERVER['REMOTE_ADDR'])) {
+  $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+}
+
 _loft_testing_define_root();
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 
