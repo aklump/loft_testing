@@ -1,0 +1,3 @@
+/lib/loft_php_lib/*
+!/lib/loft_php_lib/loft_php_lib.info
+!/lib/loft_php_lib/src/AKlump/LoftLib/Code/Exposer.php

@@ -9,5 +9,4 @@ return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'AKlump\\' => array($vendorDir . '/aklump/loft_data_grids/src'),
-    'AKlump' => array($baseDir . '/src'),
 );

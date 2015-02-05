@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    '' => array($baseDir . '/src', $baseDir . '/lib/loft_php_lib/src'),
 );

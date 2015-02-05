@@ -1,22 +1,29 @@
 {
-  "name": "aklump/loft_testing",
-  "type": "library",
-  "description": "Helper classes and functions for various testing scenarios, e.g., phpunit, simpletest.",
-  "keywords": ["phpunit"],
-  "homepage": "http://github.com/aklump/loft_testing",
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Aaron Klump",
-      "email": "sourcecode@intheloftstudios.com",
-      "homepage": "http://www.intheloftstudios.com",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "aklump/loft_data_grids": ">=0.4.4"
-  },
-  "autoload": {
-    "psr-0": {"AKlump": "src/"}  
-  }
+    "authors": [
+        {
+            "email": "sourcecode@intheloftstudios.com",
+            "homepage": "http://www.intheloftstudios.com",
+            "name": "Aaron Klump",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": [
+                "src",
+                "lib/loft_php_lib/src"
+            ]
+        }
+    },
+    "description": "Helper classes and functions for various testing scenarios, e.g., phpunit, simpletest.",
+    "homepage": "http://github.com/aklump/loft_testing",
+    "keywords": [
+        "phpunit"
+    ],
+    "license": "BSD-3-Clause",
+    "name": "aklump/loft_testing",
+    "require": {
+        "aklump/loft_data_grids": ">=0.4.4"
+    },
+    "type": "library"
 }
