@@ -1,5 +1,6 @@
 <?php
 namespace AKlump\LoftTesting\Simpletest;
+use \AKlump\LoftLib\Code\Exposer;
 
 class DrupalWebTestCase extends \DrupalWebTestCase {
 
@@ -461,4 +462,26 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
   protected function skipSubtestGroup($group) {
     return $this->skipSubtests();
   }
+
+  /**
+   * Grants access to protected and private elements of a class.
+   *
+   * @code
+   *   // Call a protected method
+   *   $this->access($obj)->protectedMethod($arg, $arg2);
+   *   
+   *   // Read a protected property.
+   *   $this->access($obj)->protectedProperty;
+   *
+   *   // Set a protected proptery.
+   *   $this->access($obj)->protectedProperty = 5;
+   * @endcode
+   *
+   * @param  object $obj
+   *
+   * @return \AKlump\LoftLib\Code\Exposer
+   */
+  public function access($obj) {
+    return new Exposer($obj);
+  }  
 }

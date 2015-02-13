@@ -5,7 +5,7 @@
 **Integration testing in Drupal is tricky and often relies on database configurations that would not be present unless you provide them to your test, i.e., nodes, fields, taxonomy, etc.  The easiest way to provide these elements is to use the [Features](https://www.drupal.org/project/features) module and export the node types, taxonomy, etc that your tests will rely on for passing.  UNDERSTAND THIS AND SAVE YOURSELF LOTS OF WASTED EFFORT!**
 
 
-1. Create a feature-based module called `tests/{{ my_module_name }}_feature` if appropriate.
+1. Create a feature-based module called `tests/{{ my_module_name }}_test_feature` if appropriate.
 1. Create a file called `tests/{{ my_module_name }}.test`.
 1. Copy into this file the contents of `examples/my_module_name.test`.
 1. Replace `{{ my_module_name }}`, `{{ MyModuleName }}` and `{{ My Module Name }}`.
