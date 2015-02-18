@@ -1,3 +1,6 @@
 /lib/loft_php_lib/*
 !/lib/loft_php_lib/loft_php_lib.info
+!/lib/loft_php_lib/src/
+/lib/loft_php_lib/src/AKlump/LoftLib/Messenger/
+/lib/loft_php_lib/src/AKlump/LoftLib/Code/*
 !/lib/loft_php_lib/src/AKlump/LoftLib/Code/Exposer.php
