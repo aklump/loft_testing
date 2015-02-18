@@ -49,7 +49,10 @@ class {{ MyModuleName }}WebTestCase extends DrupalWebTestCase {
   // - tearDownSub{$group}()
 
   public function test1() {
-    $this->doSubtests();
+
+    // To skip this test, give a reason as a string argument being sent to
+    // skipBecause().
+    $this->skipBecause("")->doSubtests();
   }
 
   public function setUpSubtest1() {

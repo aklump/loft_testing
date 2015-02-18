@@ -36,18 +36,31 @@ For any given subtest there are two fixture methods called, in the case of a tes
     setUpSubtest1();
     tearDownSubtest1();
 
-## Skipping a `testMethod` -> `_testMethod`
-If you have a test method `_test...` that is working well and you want to skip it while developing more tests, and to save execution time, you can disable it simply by preceding the method name with an underscore.  Normally only methods beginning with "test" are called, so naturally this will be skipped over.
+## Skipping a test and all its subtests
+To skip over a test and its subtests you should pass a reason as a string to the method `skipBecause()`.  Here is an example:
 
-The reason for stating the obvious, is because the not-so-obvious functionality this extension class provides.  **All methods that begin with "_test" will automatically be added to the skipped subtests array, and you will see a notice in the results that they were skipped.**  This is so you don't forget to remove that underscore later on.
+    public function test2() {
+      $this->skipBecause('These tests are waiting for the core update.')->doSubtests();
+    }
 
-## Skipping a subtest group
-Likewise you may target a subtest group to be skipped explicitly using `skipSubtests()`. Here's what you do:
+Later to stop skipping over the tests, just remove the argument like this:
 
-    public function testMyCoolGroup() {
-      $this->skipSubtests();
+    public function test2() {
+      $this->skipBecause()->doSubtests();
+    }
+
+### Legacy method
+An older method exists and still works, that is to prepend the testMethod name with an underscore like this; the first method is preferred because it forces documentation as to why the test is being skipped.
+
+    public function _test2() {
       $this->doSubtests();
     }
+
+### Reasons to skip a test
+* If you have a test method `testBla` that is working well and you want to skip it while developing more tests, to save execution time.
+
+## Skip a single subtest
+Just change the name of the subtest method by prepending an underscore.  It will be skipped, but don't forget to turn it back when you're ready; you will get no warnings when subtests are skipped in this way.
 
 ## Nesting subtest groups
 Imagine for a minute something like this.  Remember the only requirement for a subtest name is that is begins with 'sub'.  It's only convention that we've been using `__FUNCTION__` as the group name, and with some creativity you could do some cool stuff and cut down the time it takes for your testing.
@@ -60,6 +73,9 @@ Imagine for a minute something like this.  Remember the only requirement for a s
 
 
 **Be aware that skipping only occurs if you're calling `doSubtests()`** inside the method body of your test method as per the examples in this document.
+
+## Did you know?
+* The global `$drupal_test_info` is set during tests and contains test info.  Your code can know it's being testing by looking at this variable.
 
 ## Naming Conventions
 ### Test one function per subtest...

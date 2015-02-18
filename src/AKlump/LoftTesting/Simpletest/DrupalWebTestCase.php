@@ -5,27 +5,65 @@ use \AKlump\LoftLib\Code\Exposer;
 class DrupalWebTestCase extends \DrupalWebTestCase {
 
   protected $loftDrupalWebTestCaseData = array(
-    'groupedTests' => array(),
-    'skipping' => array(), 
+    
+    // Set the default group string.
     'subtestGroup' => 'Other',
+
+    // An array of test methods and reasons for skipping.  The keys are the
+    // method names and the values are the reasons.
+    'skippedTestMethods' => array(),
+    
+    // An array of test methods that are not being skipped.  Keys/values are
+    // method names.
+    'enabledTestMethods' => array(),
+
+    // A boolean to indicate when subTests should be skipped since we're just
+    // reading the tests looking for skipBecause methods.
+    'readingTests' => FALSE,
+
   );
   
   public function setUp($modules = array()) {
-
-    // List out the tests that are being skipped.
-    $class_methods = get_class_methods($this);
-    foreach ($class_methods as $method) {
-      if (strtolower(substr($method, 0, 5)) == '_test') {
-        $this->skipSubtests($method);
-      }
-    }
-
     if (!is_array($modules)) {
       $modules = func_get_args();
     }
     parent::setUp($modules);
 
     static::setUpBeforeClass();
+  }
+
+  /**
+   * We will only run those methods that we've sniffed in setUp as enabled.
+   */
+  public function run() {
+    $conf = &$this->loftDrupalWebTestCaseData;
+
+    // List out the tests that are being skipped.
+    $conf['readingTests'] = TRUE;
+    foreach (get_class_methods($this) as $key => $method) {
+      if (strtolower(substr(ltrim($method, '_'), 0, 4)) === 'test') {
+        
+        // Disabled by underscore name.
+        if (substr($method,  0, 1) === '_') {
+          $this->skipBecause('Test method begins with an underscore.', $method);
+        }
+
+        // We'll call this under the banner of $conf['readingTests'] = TRUE to
+        // simply know if we're to skip this test. We're going to run each test
+        // method in hopes that it will call a skipBecause with a value and that
+        // let's us know not to include it.
+        $this->{$method}();
+        
+
+        // We are to skip this test group.
+        if (!array_key_exists($method, $conf['skippedTestMethods'])) {
+          $conf['enabledTestMethods'][$method] = $method;
+        }
+      }
+    }
+    $conf['readingTests'] = FALSE;
+
+    parent::run($conf['enabledTestMethods']);
   }
 
   /**
@@ -97,21 +135,45 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
    * of your test method.
    *
    * @param  string $group
+   *   Optional. defaults to the calling function.
+   * @param  string $reason
+   *   Optional defaults to NULL.
    *
    * @return  $this
    */
-  protected function skipSubtests($group = NULL) {
+  protected function skipSubtests($group = NULL, $reason = NULL) {
     if ($group === NULL) {
       $group = $this->getCallingTestMethod();
     }
-    $group = ltrim($group, '_');
-    if (empty($this->loftDrupalWebTestCaseData['skipping'][$group])) {
-      $this->loftDrupalWebTestCaseData['skipping'][$group] = $group;
-      $this->error("Test group \"$group\" is currently being skipped.", $group);
-    }    
+    // $group = ltrim($group, '_');
+    $this->loftDrupalWebTestCaseData['skippedTestMethods'][$group] = $reason;
 
     return $this;
   }
+
+  /**
+   * Marks a test to be skipped and adds a reason.
+   *
+   * THIS WILL CAUSE A TEST TO BE SKIPPED EVEN IF YOU DON'T ADD THE 
+   * UNDERSCORE TO THE METHOD NAME.
+   *
+   * @param  string $reason
+   *   This must not be empty, otherwise this method does nothing.
+   * @param  string $group
+   *
+   * @return $this
+   */
+  public function skipBecause($reason = NULL, $group = NULL) {
+    if ($reason) {
+      if ($group === NULL) {
+        $group = $this->getCallingTestMethod();
+      }
+      $this->skipSubtests($group, $reason);
+    }
+
+    return $this;
+  }
+  
 
   /**
    * Run a group of tests by group name if they are not currently skipped.
@@ -139,13 +201,26 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
    * @return  $this
    */
   protected function doSubtests($group = NULL) {
+    $conf = &$this->loftDrupalWebTestCaseData;
     if ($group === NULL) {
       $group = $this->getCallingTestMethod();
     }
-    if (in_array($group, $this->loftDrupalWebTestCaseData['skipping'])) {
+
+    // Check if we're skipping this group.
+    if (array_key_exists($group, $conf['skippedTestMethods'])) {
+      $displayGroup = ltrim($group, '_');
+      $message      = array();
+      $message[]    = 'Test group "' . $displayGroup . '" is currently being skipped.';
+      if (isset($conf['skippedTestMethods'][$group])) {
+        $message[] = $conf['skippedTestMethods'][$group];
+      }
       
+      $this->error(implode(' ', $message), $displayGroup);      
     }
-    else {
+
+    // Otherwise run the subtests in the group if we're not just reading the
+    // tests for info.
+    elseif (empty($conf['readingTests'])) {
       $this->setSubtestGroup($group);
       foreach($this->getSubtests($group) as $subtest) {
         $this->pass("Running subtest: $subtest", $group);
@@ -240,8 +315,9 @@ class DrupalWebTestCase extends \DrupalWebTestCase {
    *
    * @param  mixed $var
    */
-  public function dump($var) {
-    parent::error(print_r($var, TRUE));
+  public function dump($var, $group = NULL) {
+    $group = isset($group) ? $group : $this->getCallingTestMethod();
+    parent::error(print_r($var, TRUE), $group);
   }
 
   // These are PhpUnit aliases so I don't have to remember two systems
