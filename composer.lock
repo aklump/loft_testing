@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4d9b6a1425e9e3e4909bc19eb05041fd",
+    "hash": "83263d478e5dcdbbc5af27dce212e0be",
     "packages": [
         {
             "name": "aklump/loft_data_grids",
-            "version": "0.4.13",
+            "version": "0.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aklump/loft_data_grids.git",
-                "reference": "1b8481987519d7cc1f96c17556fccfb526a7cf9d"
+                "reference": "6bcf6ddf519e615e4a104ee6628968f87ac03fab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aklump/loft_data_grids/zipball/1b8481987519d7cc1f96c17556fccfb526a7cf9d",
-                "reference": "1b8481987519d7cc1f96c17556fccfb526a7cf9d",
+                "url": "https://api.github.com/repos/aklump/loft_data_grids/zipball/6bcf6ddf519e615e4a104ee6628968f87ac03fab",
+                "reference": "6bcf6ddf519e615e4a104ee6628968f87ac03fab",
                 "shasum": ""
             },
             "require": {
@@ -24,13 +24,10 @@
                 "phpoffice/phpexcel": "1.7.*",
                 "symfony/yaml": "2.3.*"
             },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "AKlump\\": "src/"
+                "psr-4": {
+                    "": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -53,7 +50,7 @@
                 "export",
                 "spreadsheet"
             ],
-            "time": "2014-10-23 05:07:04"
+            "time": "2015-02-07 16:47:53"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -113,21 +110,24 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.3.21",
+            "version": "v2.3.26",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "34687c6236f1dfcebc874fbebd8da74d90f9f64f"
+                "reference": "aeb83d10b5ab9c9dd9993fc340a190a935646de7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/34687c6236f1dfcebc874fbebd8da74d90f9f64f",
-                "reference": "34687c6236f1dfcebc874fbebd8da74d90f9f64f",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/aeb83d10b5ab9c9dd9993fc340a190a935646de7",
+                "reference": "aeb83d10b5ab9c9dd9993fc340a190a935646de7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7"
             },
             "type": "library",
             "extra": {
@@ -156,7 +156,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-10-01 05:38:33"
+            "time": "2015-03-07 19:12:23"
         }
     ],
     "packages-dev": [],

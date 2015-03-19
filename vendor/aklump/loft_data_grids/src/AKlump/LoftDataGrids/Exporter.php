@@ -9,9 +9,7 @@ abstract class Exporter implements ExporterInterface {
   protected $export_data, $title, $filename, $extension, $output;
   protected $header = array();
 
-  protected $data = array(
-    'showPageIds' => TRUE,
-  );
+  protected $settings;
   
   /**
    * Constructor
@@ -21,6 +19,7 @@ abstract class Exporter implements ExporterInterface {
    *   (Optional) Defaults to ''.
    */
   public function __construct(ExportDataInterface $data = NULL, $filename = '') {
+    $this->setSettingsDefault();
     if (isset($data)) {
       $this->setData($data);
     }
@@ -35,6 +34,50 @@ abstract class Exporter implements ExporterInterface {
       'extension' => $this->extension,
     );
   }
+
+  /**
+   * Setup default values on object data.
+   *
+   * Child classes should implement like this, making sure you don't use 
+   * setting name already defined in the parents.
+   * 
+   * @code
+   *   protected function setSettingsDefault() {
+   *     parent::setSettingsDefault();
+   *     $this->settings->showSponsors = TRUE;
+   *   
+   *     return $this;
+   *   }  
+   * @endcode
+   *
+   * @return {$this}
+   */
+  protected function setSettingsDefault() {
+    $this->settings = (object) array(
+      'showPageIds' => TRUE,
+    );
+  
+    return $this;
+  }
+
+  public function setSettings($settings) {
+    $this->settings = new \stdClass;
+    foreach($settings as $name => $value) {
+      $this->addSetting($name, $value);
+    }
+  
+    return $this;
+  }
+  
+  public function addSetting($name, $value) {
+    $this->settings->{$name} = $value;
+  
+    return $this;
+  }
+  
+  public function getSettings() {
+    return $this->settings;
+  }  
 
   /**
    * Return a string as a safe filename
@@ -235,19 +278,19 @@ abstract class Exporter implements ExporterInterface {
   }
 
   public function showPageIds() {
-    $this->data['showPageIds'] = TRUE;
+    $this->addSetting('showPageIds', TRUE);
   
     return $this;
   }
   
   public function hidePageIds() {
-    $this->data['showPageIds'] = FALSE;
+    $this->addSetting('showPageIds', FALSE);
   
     return $this;
   }
 
   public function getShowPageIds() {
-    return $this->data['showPageIds'];
+    return $this->getSettings()->showPageIds;
   }
 
   protected function cssSafe($string) {

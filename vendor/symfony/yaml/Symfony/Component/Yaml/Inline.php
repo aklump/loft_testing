@@ -29,10 +29,10 @@ class Inline
     /**
      * Converts a YAML string to a PHP array.
      *
-     * @param string  $value                  A YAML string
-     * @param bool    $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
-     * @param bool    $objectSupport          true if object support is enabled, false otherwise
-     * @param array   $references             Mapping of variable names to values
+     * @param string $value                  A YAML string
+     * @param bool   $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
+     * @param bool   $objectSupport          true if object support is enabled, false otherwise
+     * @param array  $references             Mapping of variable names to values
      *
      * @return array A PHP array representing the YAML string
      *
@@ -83,9 +83,9 @@ class Inline
     /**
      * Dumps a given PHP variable to a YAML string.
      *
-     * @param mixed   $value                  The PHP variable to convert
-     * @param bool    $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
-     * @param bool    $objectSupport          true if object support is enabled, false otherwise
+     * @param mixed $value                  The PHP variable to convert
+     * @param bool  $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
+     * @param bool  $objectSupport          true if object support is enabled, false otherwise
      *
      * @return string The YAML string representing the PHP array
      *
@@ -125,22 +125,20 @@ class Inline
                 if (false !== $locale) {
                     setlocale(LC_NUMERIC, 'C');
                 }
-                $repr = is_string($value) ? "'$value'" : (is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : strval($value));
+                $repr = is_string($value) ? "'$value'" : (is_infinite($value) ? str_ireplace('INF', '.Inf', (string) $value) : (string) $value);
 
                 if (false !== $locale) {
                     setlocale(LC_NUMERIC, $locale);
                 }
 
                 return $repr;
+            case '' == $value:
+                return "''";
             case Escaper::requiresDoubleQuoting($value):
                 return Escaper::escapeWithDoubleQuotes($value);
             case Escaper::requiresSingleQuoting($value):
-                return Escaper::escapeWithSingleQuotes($value);
-            case '' == $value:
-                return "''";
             case preg_match(self::getTimestampRegex(), $value):
-            case in_array(strtolower($value), array('null', '~', 'true', 'false')):
-                return "'$value'";
+                return Escaper::escapeWithSingleQuotes($value);
             default:
                 return $value;
         }
@@ -149,9 +147,9 @@ class Inline
     /**
      * Dumps a PHP array to a YAML string.
      *
-     * @param array   $value                  The PHP array to dump
-     * @param bool    $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
-     * @param bool    $objectSupport          true if object support is enabled, false otherwise
+     * @param array $value                  The PHP array to dump
+     * @param bool  $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
+     * @param bool  $objectSupport          true if object support is enabled, false otherwise
      *
      * @return string The YAML string representing the PHP array
      */
@@ -159,8 +157,9 @@ class Inline
     {
         // array
         $keys = array_keys($value);
-        if ((1 == count($keys) && '0' == $keys[0])
-            || (count($keys) > 1 && array_reduce($keys, function ($v, $w) { return (int) $v + $w; }, 0) == count($keys) * (count($keys) - 1) / 2)
+        $keysCount = count($keys);
+        if ((1 === $keysCount && '0' == $keys[0])
+            || ($keysCount > 1 && array_reduce($keys, function ($v, $w) { return (int) $v + $w; }, 0) === $keysCount * ($keysCount - 1) / 2)
         ) {
             $output = array();
             foreach ($value as $val) {
@@ -182,7 +181,7 @@ class Inline
     /**
      * Parses a scalar to a YAML string.
      *
-     * @param scalar $scalar
+     * @param string $scalar
      * @param string $delimiters
      * @param array  $stringDelimiters
      * @param int    &$i
@@ -234,7 +233,7 @@ class Inline
      * Parses a quoted scalar to YAML.
      *
      * @param string $scalar
-     * @param int     &$i
+     * @param int    &$i
      *
      * @return string A YAML string
      *
@@ -275,7 +274,7 @@ class Inline
     {
         $output = array();
         $len = strlen($sequence);
-        $i += 1;
+        ++$i;
 
         // [foo, bar, ...]
         while ($i < $len) {
@@ -334,7 +333,7 @@ class Inline
     {
         $output = array();
         $len = strlen($mapping);
-        $i += 1;
+        ++$i;
 
         // {foo: bar, bar:foo, ...}
         while ($i < $len) {
@@ -433,7 +432,7 @@ class Inline
                     case 0 === strpos($scalar, '!str'):
                         return (string) substr($scalar, 5);
                     case 0 === strpos($scalar, '! '):
-                        return intval(self::parseScalar(substr($scalar, 2)));
+                        return (int) self::parseScalar(substr($scalar, 2));
                     case 0 === strpos($scalar, '!!php/object:'):
                         if (self::$objectSupport) {
                             return unserialize(substr($scalar, 13));
@@ -446,23 +445,23 @@ class Inline
                         return;
                     case ctype_digit($scalar):
                         $raw = $scalar;
-                        $cast = intval($scalar);
+                        $cast = (int) $scalar;
 
                         return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
                     case '-' === $scalar[0] && ctype_digit(substr($scalar, 1)):
                         $raw = $scalar;
-                        $cast = intval($scalar);
+                        $cast = (int) $scalar;
 
-                        return '0' == $scalar[1] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
+                        return '0' == $scalar[1] ? octdec($scalar) : (((string) $raw === (string) $cast) ? $cast : $raw);
                     case is_numeric($scalar):
-                        return '0x' == $scalar[0].$scalar[1] ? hexdec($scalar) : floatval($scalar);
+                        return '0x' === $scalar[0].$scalar[1] ? hexdec($scalar) : (float) $scalar;
                     case '.inf' === $scalarLower:
                     case '.nan' === $scalarLower:
                         return -log(0);
                     case '-.inf' === $scalarLower:
                         return log(0);
                     case preg_match('/^(-|\+)?[0-9,]+(\.[0-9]+)?$/', $scalar):
-                        return floatval(str_replace(',', '', $scalar));
+                        return (float) str_replace(',', '', $scalar);
                     case preg_match(self::getTimestampRegex(), $scalar):
                         return strtotime($scalar);
                 }
