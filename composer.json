@@ -22,8 +22,5 @@
     ],
     "license": "BSD-3-Clause",
     "name": "aklump/loft_testing",
-    "require": {
-        "aklump/loft_data_grids": ">=0.4.4"
-    },
     "type": "library"
 }

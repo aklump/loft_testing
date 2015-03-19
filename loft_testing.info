@@ -4,3 +4,5 @@ package = Development
 homepage = "http://www.intheloftstudios.com/packages/drupal/loft_testing"
 version = "7.x-0.3-rc13"
 core = 7.x
+
+dependencies[] = loft_data_grids
